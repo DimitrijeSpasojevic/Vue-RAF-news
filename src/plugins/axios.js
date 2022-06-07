@@ -10,7 +10,7 @@ import router from "../router";
 // axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 
 let config = {
-  baseURL: 'http://localhost:8081'
+  baseURL: 'http://localhost:8080'
   // timeout: 60 * 1000, // Timeout
   // withCredentials: true, // Check cross-site Access-Control
 };

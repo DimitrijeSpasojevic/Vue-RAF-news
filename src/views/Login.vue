@@ -1,11 +1,9 @@
 <template>
   <div class="pt-5">
-    <h1 v-if="username">Hello, {{username}}</h1>
     <form @submit.prevent="login">
       <div class="form-group">
-        <label for="username">Username</label>
-        <input v-model="username" type="text" class="form-control" id="username" aria-describedby="usernameHelp" placeholder="Enter username">
-        <small id="usernameHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+        <label for="email">Email</label>
+        <input v-model="email" type="text" class="form-control" id="email" aria-describedby="emailHelp" placeholder="Enter email">
       </div>
       <div class="form-group">
         <label for="exampleInputPassword1">Password</label>
@@ -13,27 +11,36 @@
       </div>
       <button type="submit" class="btn btn-primary mt-2">Submit</button>
     </form>
+    <p ref="errLogin" style="visibility: hidden">Greska pri prijavljivanju</p>
   </div>
 </template>
 
 <script>
+import jwt_decode from "jwt-decode";
+
 export default {
   name: "Login",
   data() {
     return {
-      username: '',
+      email: '',
       password: '',
     }
   },
   methods: {
     login() {
       this.$axios.post('/api/users/login', {
-        username: this.username,
+        email: this.email,
         password: this.password,
       }).then(response => {
         localStorage.setItem('jwt', response.data.jwt)
-        this.$router.push({name: 'Subjects'});
-      })
+
+        let loggedUser = jwt_decode(localStorage.getItem("jwt"));
+        localStorage.setItem('userType', loggedUser.type)
+
+        this.$router.push({name: 'Articles'});
+      }).catch(
+          this.$refs.errLogin.style.visibility = "visible"
+      )
     }
   },
 }

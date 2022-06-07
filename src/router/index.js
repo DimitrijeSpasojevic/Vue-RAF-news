@@ -8,18 +8,32 @@ const routes = [
   {
     path: '/',
     name: 'Home',
-    component: Home
+    component: Home,
+    meta: {
+      authRequired: true,
+    },
   },
   {
-    path: '/subjects',
-    name: 'Subjects',
+    path: '/articles',
+    name: 'Articles',
     meta: {
       authRequired: true,
     },
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/Subjects.vue')
+    component: () => import(/* webpackChunkName: "about" */ '../views/Articles')
+  },
+  {
+    path: '/categories',
+    name: 'Categories',
+    meta: {
+      authRequired: true,
+    },
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/Categories')
   },
   {
     path: '/subjects/:id',
@@ -31,6 +45,17 @@ const routes = [
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "about" */ '../views/SingleSubject.vue')
+  },
+  {
+    path: '/users',
+    name: 'Users',
+    meta: {
+      authRequired: true,
+    },
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/Users')
   },
   {
     path: '/login',
@@ -48,13 +73,6 @@ router.beforeEach((to, from, next) => {
     const jwt = localStorage.getItem('jwt');
 
     if (!jwt) {
-      next({name: 'Login'});
-      return;
-    }
-
-    const payload = JSON.parse(atob(jwt.split('.')[1]));
-    const expDate = new Date(payload.exp * 1000);
-    if (expDate < new Date()) {
       next({name: 'Login'});
       return;
     }

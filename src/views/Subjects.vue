@@ -47,7 +47,7 @@ export default {
       subjects: []
     }
   },
-  mounted() {
+  created() {
     this.$axios.get('/api/subjects').then((response) => {
       this.subjects = response.data;
     });

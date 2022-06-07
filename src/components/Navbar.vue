@@ -9,10 +9,13 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item">
-              <router-link to="/" tag="a" class="nav-link" :class="{active: this.$router.currentRoute.name === 'Home'}">Home</router-link>
+              <router-link :to="{name: 'Categories'}" tag="a" class="nav-link" :class="{active: this.$router.currentRoute.name === 'Categories'}">Categories</router-link>
             </li>
             <li class="nav-item">
-              <router-link :to="{name: 'Subjects'}" tag="a" class="nav-link" :class="{active: this.$router.currentRoute.name === 'Subjects'}">Subjects</router-link>
+              <router-link :to="{name: 'Articles'}" tag="a" class="nav-link" :class="{active: this.$router.currentRoute.name === 'Articles'}">Articles</router-link>
+            </li>
+            <li class="nav-item" v-if="isAdminUser">
+              <router-link :to="{name: 'Users'}" tag="a" class="nav-link" :class="{active: this.$router.currentRoute.name === 'Users'}">Users</router-link>
             </li>
           </ul>
           <form v-if="canLogout" class="d-flex" @submit.prevent="logout">
@@ -25,19 +28,26 @@
 </template>
 
 <script>
+
 export default {
   name: "Navbar",
   computed: {
     canLogout() {
       return this.$route.name !== 'Login';
+    },
+    isAdminUser(){
+      if(this.$route.name !== "Login")
+        return "Admin" === localStorage.getItem("userType")
+      return false
     }
   },
   methods: {
     logout() {
       localStorage.removeItem('jwt');
+      localStorage.removeItem('userType');
       this.$router.push({name: 'Login'});
     }
-  }
+  },
 }
 </script>
 
