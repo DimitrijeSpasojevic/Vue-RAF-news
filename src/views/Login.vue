@@ -34,8 +34,9 @@ export default {
       }).then(response => {
         localStorage.setItem('jwt', response.data.jwt)
 
-        let loggedUser = jwt_decode(localStorage.getItem("jwt"));
+        const loggedUser = jwt_decode(localStorage.getItem("jwt"));
         localStorage.setItem('userType', loggedUser.type)
+        localStorage.setItem('authorEmail', loggedUser.sub)
 
         this.$router.push({name: 'Articles'});
       }).catch(
