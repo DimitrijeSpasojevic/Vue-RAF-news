@@ -24,6 +24,13 @@
           </tr>
           </tbody>
         </table>
+
+
+          <ul class="pagination">
+            <li class="page-item"><a class="page-link" @click = "getArticlesByPage('prev')">Previous</a></li>
+            <li class="page-item"><a class="page-link" @click = "getArticlesByPage('next')" >Next</a></li>
+          </ul>
+
       </div>
       <div class="col-4">
         <Article v-if="selectedArticle" :article="selectedArticle"></Article>
@@ -60,19 +67,31 @@ export default {
       naslov: '',
       tags:'',
       categories:[],
-      selectedCategory: ''
+      selectedCategory: '',
+      pageNum: 0
     }
   },
   created() {
     this.$axios.get('/api/news/offset/0').then((response) => {
       this.articles = response.data;
-      console.log(this.articles)
     });
     this.$axios.get('/api/category').then((response) => {
       this.categories = response.data;
     });
   },
   methods:{
+
+    getArticlesByPage(action){
+      if(action == 'prev'){
+        if(this.pageNum != 0)
+          this.pageNum--;
+      }else{
+        this.pageNum++;
+      }
+      this.$axios.get('/api/news/offset/' + this.pageNum).then((response) => {
+        this.articles = response.data;
+      });
+    },
     showForm() {
       this.$refs.formNewArticle.style.visibility = "visible"
       this.$refs.btnAdd.disabled = false

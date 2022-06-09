@@ -24,6 +24,11 @@
           </tr>
           </tbody>
         </table>
+
+        <ul class="pagination">
+          <li class="page-item"><a class="page-link" @click = "getUsersByPage('prev')">Previous</a></li>
+          <li class="page-item"><a class="page-link" @click = "getUsersByPage('next')" >Next</a></li>
+        </ul>
       </div>
 
     </div>
@@ -62,11 +67,12 @@ export default {
       selectedType: '',
       password: '',
       passwordRepeated: '',
-      isUpdateFormActive: false
+      isUpdateFormActive: false,
+      pageNum: 0
     }
   },
   created() {
-    this.$axios.get('/api/users').then((response) => {
+    this.$axios.get('/api/users/offset/0').then((response) => {
       this.users = response.data;
       console.log(this.users)
     });
@@ -87,6 +93,17 @@ export default {
       this.$refs.selectType.value = this.selectedUser.type
       this.$refs.btnAddUser.disabled = true
       this.$refs.btnUpdateUser.style.visibility = "visible"
+    },
+    getUsersByPage(action){
+      if(action == 'prev'){
+        if(this.pageNum != 0)
+          this.pageNum--;
+      }else{
+        this.pageNum++;
+      }
+      this.$axios.get('/api/users/offset/' + this.pageNum).then((response) => {
+        this.users = response.data;
+      });
     },
     changeActivation(user){
       const index = this.users.indexOf(user);

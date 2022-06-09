@@ -22,6 +22,11 @@
           </tr>
           </tbody>
         </table>
+
+        <ul class="pagination">
+          <li class="page-item"><a class="page-link" @click = "getCategoriesByPage('prev')">Previous</a></li>
+          <li class="page-item"><a class="page-link" @click = "getCategoriesByPage('next')" >Next</a></li>
+        </ul>
       </div>
       <div class="col-6">
         <table class="table">
@@ -73,7 +78,8 @@ export default {
       articles:[],
       ime: '',
       opis: '',
-      articlesInCategory: Number
+      articlesInCategory: Number,
+      pageNum: 0
     }
   },
   methods: {
@@ -97,6 +103,17 @@ export default {
           }
         });
       }
+    },
+    getCategoriesByPage(action){
+      if(action == 'prev'){
+        if(this.pageNum != 0)
+          this.pageNum--;
+      }else{
+        this.pageNum++;
+      }
+      this.$axios.get('/api/category/offset/' + this.pageNum).then((response) => {
+        this.categories = response.data;
+      });
     },
     preUpdateCategory(category) {
       this.selectedCategory = category
@@ -143,7 +160,7 @@ export default {
     }
 },
   created() {
-    this.$axios.get('/api/category').then((response) => {
+    this.$axios.get('/api/category/offset/0').then((response) => {
       this.categories = response.data;
     });
   }
