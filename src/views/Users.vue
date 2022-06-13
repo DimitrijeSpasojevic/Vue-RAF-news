@@ -35,6 +35,8 @@
     <Button class="btn-primary" @click="showForm">Dodaj korisnika</Button><br><br>
     <Button class="btn-primary" ref="btnUpdateUser" @click="updateUser" style="visibility: hidden">Izmeni korisnika</Button><br><br>
 
+<!--    <Error v-if="isError.length > 0" errText="Email je zauzet, unesite drugi"></Error>-->
+
     <form ref="formNewUser" style="visibility: hidden">
       <input ref="userFirstNameInput" v-model="firstName"  type="text" required placeholder="Enter first name"/><br><br>
       <input ref="userLastNameInput" v-model="lastName"  type="text" required placeholder="Enter last name"/><br><br>
@@ -54,9 +56,11 @@
 
 <script>
 
+// import Error from "../components/Error";
+
 export default {
   name: "Users",
-  components: {},
+  // components: {Error},
   data() {
     return {
       selectedUser: null,
@@ -68,7 +72,8 @@ export default {
       password: '',
       passwordRepeated: '',
       isUpdateFormActive: false,
-      pageNum: 0
+      pageNum: 0,
+      error: ''
     }
   },
   created() {
@@ -155,9 +160,13 @@ export default {
           .then((response) => {
             this.users.push(response.data)
           })
-          .catch(function (error) {
-            console.log(error);
+          .catch(() => {
+            this.error = 'desilo se'
+            alert("Email je zauzet!");
           });
+    },
+    isError(){
+      return this.error
     }
   }
 }

@@ -156,6 +156,7 @@ export default {
           })
           .catch(function (error) {
             console.log(error);
+            alert("Kategorija sa takvim imenom vec postoji, unsite drugo ime");
           });
     }
 },
